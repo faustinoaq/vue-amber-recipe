@@ -1,0 +1,33 @@
+const {{ name }}Api = {
+  index(success, failure) {
+    $.ajax({ url: "/{{ name | pluralize }}" }).done(success).fail(failure);
+  },
+  show(id, success, failure) {
+    $.ajax({ url: `/{{ name | pluralize }}/${id}` }).done(success).fail(failure);
+  },
+  new(success, failure) {
+    $.ajax({ url: `/{{ name | pluralize }}/new` }).done(success).fail(failure);
+  },
+  submit(self, success, failure) {
+    $.ajax({
+      method: self.method,
+      url: self.action,
+      dataType: "JSON",
+      headers: {
+        "X-CSRF-TOKEN": self.csrf
+      },
+      data: self.{{ name }}
+    }).done(success).fail(failure);
+  },
+  destroy(self, id, success, failure) {
+    $.ajax({
+      url: `/{{ name | pluralize }}/${id}`,
+      method: "DELETE",
+      headers: {
+        "X-CSRF-TOKEN": self.csrf
+      }
+    }).done(success).fail(failure);
+  }
+}
+
+export default {{ name }}Api;

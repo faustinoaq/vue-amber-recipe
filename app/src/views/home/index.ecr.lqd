@@ -1,0 +1,12 @@
+<div class="row">
+  <div id="logo"></div>
+  <div class="col-sm-12 col-md-6">
+    <h2><%= t "welcome" %></h2>
+    <p>Thank you for trying out Vue.js and Amber Framework. This application is using a front-end written in Vue.js and a back-end built with Amber Framework. Enjoy!</p>
+    <div class="list-group">
+      <a class="list-group-item list-group-item-action" target="_blank" href="https://docs.amberframework.org">Getting Started with Amber Framework</a>
+      <a class="list-group-item list-group-item-action" target="_blank" href="https://vuejs.org/v2/guide/">Getting Started with Vue.js</a>
+      <a class="list-group-item list-group-item-action" target="_blank" href="https://github.com/faustinoaq/amber-vue-recipe">Take a look at Source Code on Github</a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,118 @@
+class {{ name | capitalize }}Controller < ApplicationController
+  @{{ name }} = {{ name | capitalize }}.new
+
+  before_action do
+    only [:show, :edit, :destroy] do
+      @{{ name }} = {{ name | capitalize }}.find! params["id"]
+    rescue ex
+      message = {
+        flash: {danger: ex.message},
+      }
+      respond_with 500 do
+        json message.to_json
+        html render "home/spa.slang"
+      end
+    end
+  end
+
+  def index
+    data = {
+      {{ name | pluralize }}: {{ name | capitalize }}.all,
+      csrf:  csrf_token,
+    }
+    respond_with do
+      json data.to_json
+      html render "home/spa.{{ language }}"
+    end
+  end
+
+  def show
+    data = {
+      {{ name }}: @{{ name }},
+      csrf:     csrf_token,
+    }
+    respond_with do
+      json data.to_json
+      html render "home/spa.slang"
+    end
+  end
+
+  def new
+    respond_with do
+      json csrf: csrf_token
+      html render "home/spa.slang"
+    end
+  end
+
+  def create
+    {{ name }} = {{ name | capitalize }}.new({{ name }}_params.validate!)
+    if {{ name }}.save
+      message = {
+        flash: {success: "Created {{ name | capitalize }} successfully."},
+      }
+      respond_with do
+        json message.to_json
+      end
+    else
+      raise "Could not create {{ name }}!"
+    end
+  rescue ex
+    message = {
+      flash: {danger: ex.message},
+      errors: {{ name }}.try(&.errors.map(&.to_s))
+    }
+    respond_with 500 do
+      json message.to_json
+    end
+  end
+
+  def edit
+    show
+  end
+
+  def update
+    valid_params = {{ name }}_params.validate!
+    {{ name }} = {{ name | capitalize }}.find! params["id"]
+    {{ name }}.set_attributes(valid_params)
+    if {{ name }}.save
+      message = {
+        flash: {success: "Updated {{ name | capitalize }} successfully."},
+      }
+      respond_with do
+        json message.to_json
+      end
+    else
+      raise "Could not update {{ name }}!"
+    end
+  rescue ex
+    message = {
+      flash: {danger: ex.message},
+      errors: {{ name }}.try(&.errors.map(&.to_s))
+    }
+    respond_with 500 do
+      json message.to_json
+    end
+  end
+
+  def destroy
+    @{{ name }}.destroy
+  end
+
+  def {{ name }}_params
+    params.validation do
+      {%- for field in visible_fields %}
+      {%- if field.type == "reference" %}
+      required(:{{field.name}}_id) do |{{field.name}}|
+      {%- else %}
+      required(:{{field.name}}) do |{{field.name}}|
+      {%- endif %}
+        if {{field.name}}.nil?
+          false # validation fails
+        else
+          true # validation pass
+        end
+      end
+      {%- endfor %}
+    end
+  end
+end

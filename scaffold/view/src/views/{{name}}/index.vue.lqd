@@ -1,0 +1,71 @@
+{%- assign open = "{{" -%}
+{%- assign close = "}}" -%}
+<template lang="pug">
+div
+  .d-flex
+    h2 {{ display_name | pluralize }}
+    .ml-auto
+      router-link.btn.btn-success.btn-sm(to="/{{ name | pluralize }}/new") New
+  .table-responsive(v-if="{{ name | pluralize }}.length")
+    table.table.table-striped
+      thead
+        tr
+          {%- for field in visible_fields %}
+          th {{ field.name | pluralize | capitalize }}
+          {%- endfor %}
+          th Actions
+      tbody
+        tr(v-for="{{ name }} in {{ name | pluralize }}")
+          {%- for field in visible_fields %}
+          td {{ open }}{{ name }}.{{ field.name }}{% if field.type == "reference" %}_id{% endif %}{{close}}
+          {%- endfor %}
+          td
+            .actions
+              router-link.btn.btn-primary.btn-sm(:to="'/{{ name | pluralize }}/' + {{ name }}.id") Read
+              | 
+              router-link.btn.btn-success.btn-sm(:to="'/{{ name | pluralize }}/' + {{ name }}.id + '/edit'") Edit
+              | 
+              button.btn.btn-danger.btn-sm(@click="showModal = true; current{{ name | capitalize }}Id = {{ name }}.id") Delete
+  p(v-else) No {{ name | pluralize }}
+  DeleteModal(v-if="showModal" @close="showModal = false" @destroy="destroy{{ name | capitalize }}"
+    title="Delete {{ name | capitalize }}"
+    message="Are you sure?"
+  )
+</template>
+
+<script>
+import DeleteModal from "../../assets/vue/DeleteModal.vue";
+
+import { mapState, mapActions } from "vuex";
+
+export default {
+  name: "{{ name | pluralize }}",
+  components: {
+    DeleteModal: DeleteModal
+  },
+  computed: {
+    ...mapState("{{ name | capitalize }}", ["{{ name | pluralize }}", "csrf"])
+  },
+  methods: {
+    ...mapActions("{{ name | capitalize }}", ["{{ name }}Index", "destroy"]),
+    destroy{{ name | capitalize }}() {
+      this.destroy({ self: this, id: this.current{{ name | capitalize }}Id });
+    }
+  },
+  data() {
+    return {
+      showModal: false,
+      current{{ name | capitalize }}Id: null
+    };
+  },
+  created() {
+    this.{{ name }}Index({ self : this });
+  }
+};
+</script>
+
+<style>
+.actions {
+  min-width: 161px;
+}
+</style>

@@ -1,0 +1,165 @@
+
+.logo {
+  background-color: beige;
+  background-image: url(/dist/images/logo.png);
+  background-size: contain;
+  width: 200px;
+  height: 278px;
+}
+
+/* Based on https://vuejs.org/v2/examples/modal.html */
+.modal-mask {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: opacity .3s ease;
+  display: table;
+}
+.modal-wrapper {
+  display: table-cell;
+  vertical-align: middle;
+}
+.modal-container {
+  width: 300px;
+  margin: 0px auto;
+  padding: 20px 30px;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.33);
+  transition: all .3s ease;
+  font-family: Helvetica, Arial, sans-serif;
+}
+.modal-body {
+  margin: 20px 0;
+}
+.modal-default-button {
+  float: right;
+}
+.modal-enter {
+  opacity: 0;
+}
+.modal-leave-active {
+  opacity: 0;
+}
+.modal-enter .modal-container,
+.modal-leave-active .modal-container {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+
+.actions {
+  min-width: 161px;
+}
+
+
+.actions {
+  min-width: 161px;
+}
+
+
+.actions {
+  min-width: 161px;
+}
+
+
+.actions {
+  min-width: 161px;
+}
+
+
+.masthead {
+  background-color: #f4994b;
+  box-shadow: inset 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+.nav {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+.nav-item {
+  position: relative;
+  display: inline-block;
+  padding: 10px;
+  font-weight: 500;
+  color: #ffe4cd;
+}
+.nav-item:focus,
+.nav-item:hover {
+  color: #fff;
+  text-decoration: none;
+}
+.nav .router-link-exact-active {
+  color: #fff;
+}
+.nav .router-link-exact-active:after {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 0;
+  margin-left: -5px;
+  vertical-align: middle;
+  content: " ";
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid;
+  border-left: 5px solid transparent;
+}
+
+/* Based on https://css-tricks.com/snippets/css/shake-css-keyframe-animation/ */
+.alert-shake {
+  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+@keyframes shake {
+10%, 90% {
+    transform: translateX(-1px);
+}
+20%,
+  80% {
+    transform: translateX(2px);
+}
+30%,
+  50%,
+  70% {
+    transform: translateX(-4px);
+}
+40%,
+  60% {
+    transform: translateX(4px);
+}
+}
+
+
+body {
+  color: #555;
+}
+.main {
+  padding-top: 20px;
+}
+@media (min-width: 1200px) {
+.container {
+    width: 970px;
+}
+}
+.table td,
+.table th {
+  vertical-align: middle;
+}
+.alert {
+  margin-top: 1em;
+}
+.alert p {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.nav-item-auth.nav-item-auth-signout, .nav-item-auth.nav-item-auth-signup {
+  order: 9999;
+}
+.nav-item-auth.nav-item-auth-profile, .nav-item-auth.nav-item-auth-signin {
+  order: 9990;
+  margin-left: auto;
+}
+

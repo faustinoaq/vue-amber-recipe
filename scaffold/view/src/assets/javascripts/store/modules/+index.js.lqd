@@ -1,0 +1,4 @@
+
+import module{{ name }} from './{{ name }}'
+
+modules.{{ name | capitalize }} = module{{ name }}

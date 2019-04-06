@@ -1,0 +1,5 @@
+/fake_app/
+/lib/
+/bin/
+/.shards/
+shard.lock

@@ -1,0 +1,19 @@
+name: vue-amber-recipe
+version: 0.1.0
+
+authors:
+  - Faustino Aguilar <faustinoaq@gmail.com>
+
+targets:
+  amber:
+    main: lib/amber/src/amber/cli.cr
+
+description: |
+  An Amber Framework recipe using Vue.js
+
+dependencies:
+  amber:
+    github: amberframework/amber
+    version: ~> 0.8.0
+
+license: MIT

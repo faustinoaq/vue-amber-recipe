@@ -1,0 +1,10 @@
+
+import {{ display_name | pluralize }} from '../../views/{{ name }}/index.vue'
+import {{ name | capitalize }}New from '../../views/{{ name }}/new.vue'
+import {{ name | capitalize }}Edit from '../../views/{{ name }}/edit.vue'
+import {{ name | capitalize }}Show from '../../views/{{ name }}/show.vue'
+
+routes.push({ id: '{{ display_name | pluralize }}', component: {{ display_name | pluralize }}, text: '{{ display_name | pluralize }}', path: '/{{ name | pluralize }}' })
+routes.push({ id: '{{ name | capitalize }}New', component: {{ name | capitalize }}New, path: '/{{ name | pluralize }}/new' })
+routes.push({ id: '{{ name | capitalize }}Edit', component: {{ name | capitalize }}Edit, path: '/{{ name | pluralize }}/:id/edit', props: true  })
+routes.push({ id: '{{ name | capitalize }}Show', component: {{ name | capitalize }}Show, path: '/{{ name | pluralize }}/:id', props: true  })

@@ -1,0 +1,39 @@
+<template lang="pug">
+div
+  h1 Edit {{ display_name }}
+  {{ name | capitalize }}Form(:_{{ name }}="{{ name }}")
+</template>
+
+<script>
+import {{ name | capitalize }}Form from "./_form.vue";
+import { mapGetters, mapActions } from "vuex";
+
+export default {
+  name: "{{ name | capitalize }}Edit",
+  props: {
+    id: String
+  },
+  components: {
+    {{ name | capitalize }}Form: {{ name | capitalize }}Form
+  },
+  computed: {
+    ...mapGetters("{{ name | capitalize }}", ["getById"])
+  },
+  methods: {
+    ...mapActions("{{ name | capitalize }}", ["show"])
+  },
+  data() {
+    return {
+      {{ name }}: {}
+    };
+  },
+  created() {
+    let object = this.getById(parseInt(this.id));
+    if (object.id) {
+      this.{{ name }} = object;
+    } else {
+      this.show({ self: this });
+    }
+  }
+};
+</script>

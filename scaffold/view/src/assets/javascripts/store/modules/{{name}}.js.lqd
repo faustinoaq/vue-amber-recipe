@@ -1,0 +1,132 @@
+import {{ name }}Api from "../api/{{ name }}"
+
+const module{{ name | capitalize }} = {
+  namespaced: true,
+  state: {
+    {{ name | pluralize }}: [],
+    csrf: null
+  },
+  mutations: {
+    SAVE(state, {{ name | pluralize }}) {
+      state.{{ name | pluralize }} = {{ name | pluralize }};
+    },
+    APPEND(state, data) {
+      let object = state.{{ name | pluralize }}.find(element => element.id === data.id);
+      if (!object) {
+        state.{{ name | pluralize }}.push(data);
+      }
+    },
+    UPDATE(state, data) {
+      let objectIndex = state.{{ name | pluralize }}.findIndex(element => element.id === data.id);
+      if (objectIndex >= 0) {
+        state.{{ name | pluralize }}[objectIndex] = data;
+      }
+    },
+    DELETE(state, id) {
+      state.{{ name | pluralize }} = state.{{ name | pluralize }}.filter(element => element.id !== id);
+    },
+    CSRF(state, token) {
+      state.csrf = token;
+    }
+  },
+  getters: {
+    getById: (state) => (id) => {
+      let object = state.{{ name | pluralize }}.find(element => element.id === id);
+      if (object) {
+        return object;
+      }
+      return {};
+    }
+  },
+  actions: {
+    {{ name }}Index({ commit }, { self }) {
+      {{ name }}Api.index(
+        function success(data) {
+          commit("CSRF", data.csrf);
+          commit("SAVE", data.{{ name | pluralize }});
+        },
+        function failure() {
+          self.$root.$emit("message", {
+            danger: "Could not load {{ name | pluralize }}!"
+          });
+        }
+      )
+    },
+    new({ commit }, { self }) {
+      {{ name }}Api.new(
+        function success(data) {
+          commit("CSRF", data.csrf);
+        },
+        function failure() {
+          self.$root.$emit("message", {
+            danger: "Could not load CSRF Token!"
+          });
+        }
+      )
+    },
+    show({ commit }, { self }) {
+      {{ name }}Api.show(
+        self.id,
+        function success(data) {
+          commit("CSRF", data.csrf);
+          commit("APPEND", data.{{ name }});
+          self.{{ name }} = self.getById(parseInt(self.id));
+        },
+        function failure(data) {
+          self.$root.$emit("message", data.responseJSON.flash);
+        }
+      )
+    },
+    submit({ commit }, { self }) {
+      {{ name }}Api.submit(
+        self,
+        function success(data) {
+          if (self.method == "POST") {
+            commit("APPEND", self.{{ name }});
+          } else if (self.method == "PATCH") {
+            commit("UPDATE", self.{{ name }});
+          }
+          self.$root.$emit("message", data.flash);
+        },
+        function failure(data) {
+          if (!data.responseJSON) {
+            self.$root.$emit("message", {
+              danger: "Could not save {{ name | capitalize }}!"
+            });
+            return;
+          }
+          if (data.responseJSON.error) {
+            // CSRF check failed
+            self.$root.$emit("message", { danger: data.responseJSON.error });
+          } else if (data.responseJSON.flash) {
+            // Amber Exceptions (param validation, {{ name }} not found, etc)
+            self.$root.$emit("message", data.responseJSON.flash);
+            if (data.responseJSON.errors) {
+              // Granite ORM validation errors (field validations)
+              self.errors = data.responseJSON.errors;
+            }
+          }
+        }
+      )
+    },
+    destroy({ commit }, { self, id }) {
+      {{ name }}Api.destroy(
+        self,
+        id,
+        function success() {
+          commit("DELETE", id);
+          self.$root.$emit("message", {
+            warning: "{{ name | capitalize }} deleted!"
+          });
+        },
+        function failure() {
+          self.$root.$emit("message", {
+            danger: "Could not delete {{ name }}!"
+          });
+        }
+      )
+    }
+  }
+}
+
+export default module{{ name | capitalize }};

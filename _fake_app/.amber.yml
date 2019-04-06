@@ -1,0 +1,5 @@
+type: app
+database: sqlite
+language: slang
+model: granite
+recipe: /home/main/Projects/vue-amber-recipe

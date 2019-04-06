@@ -1,0 +1,28 @@
+<template lang="pug">
+div
+  h1 New {{ display_name }}
+  {{ name | capitalize }}Form(:_{{ name }}="{{ name }}")
+</template>
+
+<script>
+import {{ name | capitalize }}Form from "./_form.vue";
+import { mapActions } from "vuex";
+
+export default {
+  name: "{{ name | capitalize }}New",
+  components: {
+    {{ name | capitalize }}Form: {{ name | capitalize }}Form
+  },
+  methods: {
+    ...mapActions("{{ name | capitalize }}", ["new"])
+  },
+  data() {
+    return {
+      {{ name }}: {}
+    };
+  },
+  created() {
+    this.new({ self: this });
+  }
+};
+</script>

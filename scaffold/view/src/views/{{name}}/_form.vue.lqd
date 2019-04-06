@@ -1,0 +1,85 @@
+{%- assign open = "{{" -%}
+{%- assign close = "}}" -%}
+<template lang="pug">
+.div
+  ul.errors
+    li(v-for="error in errors") {{ open }} error {{ close }}
+
+  form
+    {%- for field in visible_fields %}
+    .form-group
+      {%- if field.type == "text" %}
+      textarea(v-model="{{ name }}.{{ field.name }}" placeholder="{{ field.name | capitalize }}" class="form-control" size="30x10")
+      {%- elsif field.type == "boolean" %}
+      .form-check
+        input.form-check-input(v-model="{{ name }}.{{ field.name }}" id="{{ field.name }}" type="checkbox" :true-value=1 :false-value=0 :checked="{{ name }}.{{ field.name }} == '1'" )
+        label.form-check-label(for="{{ field.name }}") {{ field.name | pluralize }}
+      {%- elsif field.type == "reference" %}
+      label(for="{{ field.name }}") {{ field.name | pluralize }}
+      select(v-model="{{ name }}.{{ field.name }}_id" id="{{ field.name }}" class="form-control")
+        template(v-if="{{ field.name | pluralize }}.length")
+          option(v-for="{{ field.name }} in {{ field.name | pluralize }}" :value="{{ field.name }}.id") {{ open }} {{ field.name }}.id {{ close }}
+        template(v-else)
+          option(disabled) No {{ field.name | pluralize }}
+      {%- else %}
+      input(v-model="{{ name }}.{{ field.name }}" placeholder="{{ field.name | capitalize }}" class="form-control")
+      {%- endif %}
+    {%- endfor %}
+    button.btn.btn-primary.btn-sm(@click.prevent="onSubmit()") Submit
+    | 
+    button.btn.btn-secondary.btn-sm(@click.prevent="$router.go(-1)") back
+</template>
+
+<script>
+import { mapState, mapActions } from "vuex";
+
+export default {
+  name: "{{ name | capitalize }}Form",
+  props: {
+    _{{ name }}: Object
+  },
+  computed: {
+    ...mapState("{{ name | capitalize }}", ["csrf"]),
+    {%- for field in visible_fields %}
+    {%- if field.type == "reference" %}
+    ...mapState("{{ field.name | capitalize }}", ["{{ field.name | pluralize }}"]),
+    {%- endif %}
+    {%- endfor %}
+    {{ name }}() {
+      return Object.assign({}, this._{{ name }});
+    }
+  },
+  methods: {
+    ...mapActions("{{ name | capitalize }}", ["submit"]),
+    {%- for field in visible_fields %}
+    {%- if field.type == "reference" %}
+    ...mapActions("{{ field.name | capitalize }}", ["{{ field.name }}Index"]),
+    {%- endif %}
+    {%- endfor %}
+    onSubmit() {
+      this.submit({ self: this });
+    }
+  },
+  data() {
+    return {
+      action: "/{{ name | pluralize }}/",
+      method: "POST",
+      errors: []
+    };
+  },
+  mounted() {
+    if (this._{{ name }}.id >= 0) {
+      this.action += this._{{ name }}.id;
+      this.method = "PATCH";
+    }
+  },
+  created(){
+    {%- for field in visible_fields %}
+    {%- if field.type == "reference" %}
+    {%- assign reference = true %}
+    this.{{field.name}}Index({ self: this });
+    {%- endif %}
+    {%- endfor %}
+  }
+};
+</script>

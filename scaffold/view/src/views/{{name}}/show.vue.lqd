@@ -1,0 +1,43 @@
+{%- assign open = "{{" -%}
+{%- assign close = "}}" -%}
+<template lang="pug">
+div
+  h1 Show {{ name | capitalize }}
+  {% for field in visible_fields -%}
+  p {{ open }}{{ name }}.{{ field.name }}{% if field.type == "reference" %}_id{% endif %}{{close}}
+  {% endfor -%}
+  p
+    button.btn.btn-secondary.btn-sm(@click.prevent="$router.go(-1)") back
+    | 
+    router-link.btn.btn-success.btn-sm(:to="'/{{ name | pluralize }}/' + {{ name }}.id + '/edit'") Edit
+</template>
+
+<script>
+import { mapGetters, mapActions } from "vuex";
+
+export default {
+  name: "{{ name | capitalize }}Show",
+  props: {
+    id: String
+  },
+  computed: {
+    ...mapGetters("{{ name | capitalize }}", ["getById"])
+  },
+  methods: {
+    ...mapActions("{{ name | capitalize }}", ["show"])
+  },
+  data() {
+    return {
+      {{ name }}: {}
+    };
+  },
+  created() {
+    let object = this.getById(parseInt(this.id));
+    if (object.id) {
+      this.{{ name }} = object;
+    } else {
+      this.show({ self: this });
+    }
+  }
+};
+</script>
